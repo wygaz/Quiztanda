@@ -1,0 +1,35 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Quiz - Desafio da Quitanda</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h2 id="saudacao"></h2>
+    <p id="pergunta">Esta fruta está boa ou deve ser descartada?</p>
+    <img src="imagens/maca.jpg" alt="Maçã" width="300">
+    <div>
+        <button onclick="responder(true)">Boa</button>
+        <button onclick="responder(false)">Descartada</button>
+    </div>
+    <p id="feedback"></p>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const nome = params.get('nome') || 'visitante';
+        document.getElementById('saudacao').textContent = 'Vamos lá, ' + nome + '!';
+
+        let pontuacao = 0;
+        function responder(correto) {
+            const feedback = document.getElementById("feedback");
+            if (correto) {
+                pontuacao++;
+                feedback.textContent = "Muito bem, " + nome + "! Pontuação: " + pontuacao;
+            } else {
+                feedback.textContent = "Tente novamente, " + nome + "! Pontuação: " + pontuacao;
+            }
+        }
+    </script>
+</body>
+</html>

@@ -7,16 +7,16 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <img src="logo_viva.png" alt="Logo Viva Produtos Naturais" id="logo">
     <h1>Desafio da Quitanda</h1>
-    <div id="quiz">
-        <p>Pergunta 1: Esta fruta está boa ou deve ser descartada?</p>
-        <img src="imagens/maca.jpg" alt="Maçã" width="300">
-        <div>
-            <button onclick="responder(true)">Boa</button>
-            <button onclick="responder(false)">Descartada</button>
-        </div>
-    </div>
-    <p id="feedback"></p>
-    <script src="script.js"></script>
+    <p>Olá! Qual é o seu nome ou apelido?</p>
+    <input type="text" id="nomeUsuario" placeholder="Digite seu nome...">
+    <button onclick="comecar()">Começar o desafio!</button>
+    <script>
+        function comecar() {
+            const nome = document.getElementById('nomeUsuario').value || 'visitante';
+            window.location.href = 'quiz.html?nome=' + encodeURIComponent(nome);
+        }
+    </script>
 </body>
 </html>
