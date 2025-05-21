@@ -8,26 +8,25 @@
 </head>
 <body>
     <h2 id="saudacao"></h2>
-    <p id="pergunta">Esta fruta está boa ou deve ser descartada?</p>
-    <img src="imagens/maca.jpg" alt="Maçã" width="300">
-    <div>
-        <button onclick="responder(true)">Boa</button>
-        <button onclick="responder(false)">Descartada</button>
+    <p id="pergunta">Clique na banana em estado de atenção:</p>
+    <div id="imagens">
+        <img src="imagens/banana_otima.jpg" alt="Ótima" onclick="responder(0)">
+        <img src="imagens/banana_boa.jpg" alt="Boa" onclick="responder(1)">
+        <img src="imagens/banana_atencao.jpg" alt="Atenção" onclick="responder(2)">
+        <img src="imagens/banana_ruim.jpg" alt="Ruim" onclick="responder(3)">
     </div>
     <p id="feedback"></p>
     <script>
-        const params = new URLSearchParams(window.location.search);
-        const nome = params.get('nome') || 'visitante';
-        document.getElementById('saudacao').textContent = 'Vamos lá, ' + nome + '!';
+        const nome = localStorage.getItem("nome") || 'visitante';
+        document.getElementById("saudacao").textContent = 'Vamos lá, ' + nome + '!';
 
-        let pontuacao = 0;
-        function responder(correto) {
+        const correta = 2;
+        function responder(escolhida) {
             const feedback = document.getElementById("feedback");
-            if (correto) {
-                pontuacao++;
-                feedback.textContent = "Muito bem, " + nome + "! Pontuação: " + pontuacao;
+            if (escolhida === correta) {
+                feedback.textContent = "Muito bem, " + nome + "! Essa banana está mesmo em estado de atenção.";
             } else {
-                feedback.textContent = "Tente novamente, " + nome + "! Pontuação: " + pontuacao;
+                feedback.textContent = "Hmm... não é essa, " + nome + ". Tente observar melhor os sinais.";
             }
         }
     </script>

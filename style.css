@@ -9,11 +9,17 @@ h1, h2 {
     color: #2e7d32;
 }
 button {
-    margin: 10px;
+    margin: 15px;
     padding: 10px 20px;
     font-size: 18px;
 }
-#logo {
-    max-width: 200px;
-    margin-bottom: 20px;
+#imagens img {
+    width: 200px;
+    margin: 10px;
+    cursor: pointer;
+    border: 3px solid transparent;
+    transition: border 0.3s;
+}
+#imagens img:hover {
+    border: 3px solid #4caf50;
 }
