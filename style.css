@@ -23,3 +23,7 @@ button {
 #imagens img:hover {
     border: 3px solid #4caf50;
 }
+#logo {
+    max-width: 200px;
+    margin-bottom: 20px;
+}
