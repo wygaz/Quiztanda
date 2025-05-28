@@ -13,6 +13,13 @@ const perguntas = [
     { texto: "Esta fruta está em ótimo estado?" }
 ];
 
+const rotulos = {
+    otimo: "Em ótimo estado",
+    bom: "Bom para consumo",
+    atencao: "Em estado de atenção",
+    descartavel: "Descartável"
+};
+
 function shuffle(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -37,7 +44,8 @@ function novaPergunta() {
     imagens.forEach(imgData => {
         const img = document.createElement("img");
         img.src = imgData.src;
-        img.alt = imgData.estado;
+        img.alt = rotulos[imgData.estado];
+        img.title = rotulos[imgData.estado];
         img.style.width = "150px";
         img.style.margin = "10px";
         img.onclick = () => {
