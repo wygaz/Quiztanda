@@ -1,69 +1,91 @@
-
 const frutas = [
-    "banana", "cenoura", "tomate", "batata", "alface", "abacate", "laranja",
-    "maca", "pera", "morango", "couve", "brocolis", "manga", "pepino", "uva"
+    "banana", "tomate", "maca", "laranja", "abacate", "pera", "morango", "cenoura",
+    "batata", "alface", "couve", "brocolis", "manga", "pepino", "uva"
 ];
 
 const estados = ["otimo", "bom", "atencao", "descartavel"];
-const rotulos = {
-    otimo: "Em ótimo estado",
-    bom: "Bom para consumo",
-    atencao: "Em estado de atenção",
-    descartavel: "Descartável"
+const perguntasPorEstado = {
+    "otimo": "Qual dessas está em ótimo estado?",
+    "bom": "Qual dessas está boa para consumo?",
+    "atencao": "Qual dessas está em estado de atenção?",
+    "descartavel": "Qual dessas deve ser descartada?"
 };
 
-const modo = "imagem_unica"; // ou "quatro_imagens"
+// Alternância entre modo 1 e 2
+function gerarPergunta() {
+    const modo = Math.random() < 0.5 ? 1 : 2; // 50% de chance para cada
 
-function shuffle(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
+    if (modo === 1) {
+        gerarPerguntaModo1();
+    } else {
+        gerarPerguntaModo2();
     }
 }
 
-function novaPergunta() {
-    const fruta = frutas[Math.floor(Math.random() * frutas.length)];
-    const estado = estados[Math.floor(Math.random() * estados.length)];
-    const divImgs = document.getElementById("imagens");
-    const divOpts = document.getElementById("opcoes");
-    const feedback = document.getElementById("feedback");
-    feedback.textContent = "";
-    divImgs.innerHTML = "";
-    divOpts.innerHTML = "";
+// MODO 1: 1 imagem, 4 opções de estado
+function gerarPerguntaModo1() {
+    const fruta = escolher(frutas);
+    const estadoCorreto = escolher(estados);
 
-    if (modo === "imagem_unica") {
+    const imagemPath = `imagens/${fruta}/${fruta}_${estadoCorreto}.jpg`;
+    document.getElementById("imagem").src = imagemPath;
+
+    const pergunta = "Qual é o estado desta fruta?";
+    document.getElementById("pergunta").innerText = pergunta;
+
+    const opcoes = embaralhar([...estados]);
+    const container = document.getElementById("opcoes");
+    container.innerHTML = "";
+
+    opcoes.forEach(opcao => {
+        const btn = document.createElement("button");
+        btn.innerText = opcao.charAt(0).toUpperCase() + opcao.slice(1);
+        btn.onclick = () => verificarResposta(opcao, estadoCorreto);
+        container.appendChild(btn);
+    });
+}
+
+// MODO 2: 4 imagens, 1 pergunta direcionada
+function gerarPerguntaModo2() {
+    const fruta = escolher(frutas);
+    const estadoPergunta = escolher(estados);
+
+    const pergunta = perguntasPorEstado[estadoPergunta];
+    document.getElementById("pergunta").innerText = pergunta;
+
+    const container = document.getElementById("opcoes");
+    container.innerHTML = "";
+
+    estados.forEach(estado => {
         const img = document.createElement("img");
         img.src = `imagens/${fruta}/${fruta}_${estado}.jpg`;
-        img.alt = rotulos[estado];
-        divImgs.appendChild(img);
+        img.alt = estado;
+        img.style.width = "150px";
+        img.style.margin = "10px";
+        img.style.cursor = "pointer";
+        img.onclick = () => verificarResposta(estado, estadoPergunta);
+        container.appendChild(img);
+    });
 
-        document.getElementById("pergunta").textContent = `Qual o estado desta fruta?`;
-
-        estados.forEach(e => {
-            const btn = document.createElement("button");
-            btn.className = "resposta";
-            btn.textContent = rotulos[e];
-            btn.onclick = () => {
-                feedback.textContent = (e === estado) ? "✅ Acertou!" : "❌ Tente novamente.";
-            };
-            divOpts.appendChild(btn);
-        });
-
-    } else {
-        document.getElementById("pergunta").textContent = `Clique na fruta em ${rotulos[estado].toLowerCase()}.`;
-        const imagens = estados.map(e => ({
-            src: `imagens/${fruta}/${fruta}_${e}.jpg`,
-            estado: e
-        }));
-        shuffle(imagens);
-        imagens.forEach(imgData => {
-            const img = document.createElement("img");
-            img.src = imgData.src;
-            img.alt = rotulos[imgData.estado];
-            img.onclick = () => {
-                feedback.textContent = (imgData.estado === estado) ? "✅ Acertou!" : "❌ Tente novamente.";
-            };
-            divImgs.appendChild(img);
-        });
-    }
+    document.getElementById("imagem").src = ""; // limpa imagem central
 }
+
+function verificarResposta(resposta, correta) {
+    if (resposta === correta) {
+        alert("✅ Resposta correta!");
+    } else {
+        alert(`❌ Resposta incorreta. O correto era: ${correta}`);
+    }
+    gerarPergunta();
+}
+
+function escolher(lista) {
+    return lista[Math.floor(Math.random() * lista.length)];
+}
+
+function embaralhar(lista) {
+    return lista.sort(() => Math.random() - 0.5);
+}
+
+// Início
+document.addEventListener("DOMContentLoaded", gerarPergunta);
