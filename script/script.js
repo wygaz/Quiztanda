@@ -1,70 +1,87 @@
 
-let pontuacao = 0;
+let perguntas = [];
 let questaoAtual = 0;
+let pontuacao = 0;
 let totalQuestoes = 10;
-let nomeUsuario = "";
-
-function iniciarQuiz() {
-    const nome = document.getElementById("nomeUsuario").value;
-    const qtd = parseInt(document.getElementById("quantidadeQuestoes").value);
-
-    localStorage.setItem("nomeUsuario", nome);
-    localStorage.setItem("totalQuestoes", qtd);
-
-    window.location.href = "quiz.html";
-}
 
 function carregarQuiz() {
-    nomeUsuario = localStorage.getItem("nomeUsuario") || "";
-    totalQuestoes = parseInt(localStorage.getItem("totalQuestoes")) || 10;
+    const nome = localStorage.getItem("nomeUsuario");
+    const qtd = localStorage.getItem("quantidadeQuestoes");
 
-    if (questaoAtual >= totalQuestoes) {
-        finalizarQuiz();
+    if (!nome || !qtd) {
+        alert("Nome ou quantidade de questões não definido.");
+        window.location.href = "index.html";
         return;
     }
 
-    const modos = ["modo1", "modo2"];
-    const modoEscolhido = modos[Math.floor(Math.random() * modos.length)];
+    totalQuestoes = parseInt(qtd);
+    document.getElementById("nomeUsuario").innerText = nome;
 
-    const pergunta = document.getElementById("pergunta");
-    const opcoes = document.getElementById("opcoes");
-    const pontuacaoText = document.getElementById("pontuacao");
+    perguntas = embaralhar(perguntasOriginais).slice(0, totalQuestoes);
+    console.log(">>> Total de questões selecionadas:", perguntas.length);
 
-    const frutas = ["banana", "maçã", "laranja", "tomate"];
-    const estados = ["ótimo", "bom", "atenção", "descartável"];
-    const fruta = frutas[Math.floor(Math.random() * frutas.length)];
-    const estadoCorreto = estados[Math.floor(Math.random() * estados.length)];
+    exibirProximaPergunta();
+}
 
-    pergunta.innerText = "Qual o estado desta fruta?";
-    opcoes.innerHTML = "";
+function embaralhar(array) {
+    return array.sort(() => Math.random() - 0.5);
+}
 
-    const estadosMisturados = [...estados].sort(() => Math.random() - 0.5);
-    estadosMisturados.forEach(estado => {
-        const btn = document.createElement("button");
-        btn.innerText = estado;
-        btn.onclick = () => verificarResposta(estado, estadoCorreto);
-        opcoes.appendChild(btn);
+function exibirProximaPergunta() {
+    if (questaoAtual >= perguntas.length) {
+        mostrarResultadoFinal();
+        return;
+    }
+
+    const pergunta = perguntas[questaoAtual];
+    const perguntaContainer = document.getElementById("perguntaContainer");
+    perguntaContainer.innerHTML = "";
+
+    const imagem = document.createElement("img");
+    imagem.src = pergunta.imagem;
+    imagem.alt = "Imagem da fruta";
+    imagem.style.width = "200px";
+
+    const textoPergunta = document.createElement("p");
+    textoPergunta.innerText = pergunta.texto;
+
+    perguntaContainer.appendChild(imagem);
+    perguntaContainer.appendChild(textoPergunta);
+
+    const opcoesContainer = document.getElementById("opcoesContainer");
+    opcoesContainer.innerHTML = "";
+
+    pergunta.opcoes.forEach((opcao, index) => {
+        const botao = document.createElement("button");
+        botao.innerText = opcao;
+        botao.onclick = () => verificarResposta(index, pergunta.correta);
+        opcoesContainer.appendChild(botao);
     });
 
-    pontuacaoText.innerText = `Você acertou ${pontuacao} de ${questaoAtual} questões respondidas`;
+    atualizarPontuacao();
+    console.log(">> Questão atual:", questaoAtual + 1);
 }
 
-function verificarResposta(resposta, correta) {
-    if (resposta === correta) {
+function verificarResposta(respostaSelecionada, respostaCorreta) {
+    console.log("Resposta correta:", respostaCorreta, "Selecionada:", respostaSelecionada);
+    if (respostaSelecionada === respostaCorreta) {
         pontuacao++;
-        alert("✅ Correto!");
-    } else {
-        alert("❌ Errado. A resposta correta era: " + correta);
     }
     questaoAtual++;
-    carregarQuiz();
+    console.log("Nova pontuação:", pontuacao);
+    exibirProximaPergunta();
 }
 
-function finalizarQuiz() {
-    alert(`${nomeUsuario}, você acertou ${pontuacao} de ${totalQuestoes} questões.`);
-    window.location.href = "index.html";
+function atualizarPontuacao() {
+    const pontuacaoDiv = document.getElementById("pontuacao");
+    pontuacaoDiv.innerText = `Você acertou ${pontuacao} de ${questaoAtual} questões respondidas`;
 }
 
-if (window.location.pathname.includes("quiz.html")) {
-    window.onload = carregarQuiz;
+function mostrarResultadoFinal() {
+    const perguntaContainer = document.getElementById("perguntaContainer");
+    const opcoesContainer = document.getElementById("opcoesContainer");
+
+    perguntaContainer.innerHTML = "<h3>Teste concluído!</h3>";
+    opcoesContainer.innerHTML = `<p>Pontuação final: ${pontuacao} de ${totalQuestoes}</p>`;
+    console.log("Teste finalizado: ", pontuacao, "/", totalQuestoes);
 }
