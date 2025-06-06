@@ -1,24 +1,15 @@
 
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Quiz - Desafio da Quitanda</title>
-    <style>
-        body { font-family: Arial; background-color: #f4fdf4; text-align: center; padding: 20px; }
-        img { border: 2px solid #ccc; border-radius: 8px; width: 150px; margin: 10px; }
-        img:hover { transform: scale(1.05); border-color: #2ecc71; }
-        button, .resposta { margin-top: 15px; padding: 10px 20px; font-size: 16px; cursor: pointer; }
-        #feedback { margin-top: 20px; font-weight: bold; }
-    </style>
+    <title>Quiz da Quitanda</title>
 </head>
 <body>
-    <h2>Quiz: Desafio da Quitanda 🧺</h2>
-    <p id="pergunta">Clique no botão abaixo para iniciar!</p>
-    <div id="imagens"></div>
+    <h2 id="pergunta"></h2>
+    <img id="imagem" style="max-width: 300px; display: block; margin-bottom: 20px;">
     <div id="opcoes"></div>
-    <p id="feedback"></p>
-    <button onclick="novaPergunta()">Nova Pergunta</button>
+    <div id="resultado" style="margin-top: 20px; font-weight: bold;"></div>
     <script src="script/quiz.js"></script>
 </body>
 </html>

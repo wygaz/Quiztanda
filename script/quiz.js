@@ -1,9 +1,4 @@
-const frutas = [
-    "banana", "tomate", "maca", "laranja", "abacate", "pera", "morango", "cenoura",
-    "batata", "alface", "couve", "brocolis", "manga", "pepino", "uva"
-];
 
-const estados = ["otimo", "bom", "atencao", "descartavel"];
 const perguntasPorEstado = {
     "otimo": "Qual dessas está em ótimo estado?",
     "bom": "Qual dessas está boa para consumo?",
@@ -11,29 +6,46 @@ const perguntasPorEstado = {
     "descartavel": "Qual dessas deve ser descartada?"
 };
 
-// Alternância entre modo 1 e 2
-function gerarPergunta() {
-    const modo = Math.random() < 0.5 ? 1 : 2; // 50% de chance para cada
+const TOTAL_QUESTOES = 10;
+
+let filaPerguntas = [{"fruta": "tomate", "estado": "atencao", "modo": 1}, {"fruta": "alface", "estado": "atencao", "modo": 2}, {"fruta": "laranja", "estado": "descartavel", "modo": 1}, {"fruta": "tomate", "estado": "descartavel", "modo": 1}, {"fruta": "morango", "estado": "descartavel", "modo": 2}, {"fruta": "pepino", "estado": "bom", "modo": 2}, {"fruta": "tomate", "estado": "atencao", "modo": 2}, {"fruta": "uva", "estado": "bom", "modo": 1}, {"fruta": "alface", "estado": "bom", "modo": 2}, {"fruta": "morango", "estado": "bom", "modo": 1}];
+let pontuacao = 0;
+let questaoAtual = 0;
+
+function embaralhar(array) {
+    return array.sort(() => Math.random() - 0.5);
+}
+
+function iniciarQuiz() {
+    filaPerguntas = embaralhar(filaPerguntas);
+    pontuacao = 0;
+    questaoAtual = 0;
+    document.getElementById("resultado").innerText = "";
+    gerarProximaPergunta();
+}
+
+function gerarProximaPergunta() {
+    if (questaoAtual >= TOTAL_QUESTOES) {
+        encerrarQuiz();
+        return;
+    }
+
+    const { fruta, estado, modo } = filaPerguntas[questaoAtual];
+    questaoAtual++;
 
     if (modo === 1) {
-        gerarPerguntaModo1();
+        gerarPerguntaModo1(fruta, estado);
     } else {
-        gerarPerguntaModo2();
+        gerarPerguntaModo2(fruta, estado);
     }
 }
 
-// MODO 1: 1 imagem, 4 opções de estado
-function gerarPerguntaModo1() {
-    const fruta = escolher(frutas);
-    const estadoCorreto = escolher(estados);
-
-    const imagemPath = `imagens/${fruta}/${fruta}_${estadoCorreto}.jpg`;
-    document.getElementById("imagem").src = imagemPath;
-
+function gerarPerguntaModo1(fruta, estadoCorreto) {
     const pergunta = "Qual é o estado desta fruta?";
     document.getElementById("pergunta").innerText = pergunta;
+    document.getElementById("imagem").src = `imagens/${fruta}/${fruta}_${estadoCorreto}.jpg`;
 
-    const opcoes = embaralhar([...estados]);
+    const opcoes = embaralhar(["otimo", "bom", "atencao", "descartavel"]);
     const container = document.getElementById("opcoes");
     container.innerHTML = "";
 
@@ -45,18 +57,15 @@ function gerarPerguntaModo1() {
     });
 }
 
-// MODO 2: 4 imagens, 1 pergunta direcionada
-function gerarPerguntaModo2() {
-    const fruta = escolher(frutas);
-    const estadoPergunta = escolher(estados);
-
+function gerarPerguntaModo2(fruta, estadoPergunta) {
     const pergunta = perguntasPorEstado[estadoPergunta];
     document.getElementById("pergunta").innerText = pergunta;
+    document.getElementById("imagem").src = "";
 
     const container = document.getElementById("opcoes");
     container.innerHTML = "";
 
-    estados.forEach(estado => {
+    ["otimo", "bom", "atencao", "descartavel"].forEach(estado => {
         const img = document.createElement("img");
         img.src = `imagens/${fruta}/${fruta}_${estado}.jpg`;
         img.alt = estado;
@@ -66,26 +75,32 @@ function gerarPerguntaModo2() {
         img.onclick = () => verificarResposta(estado, estadoPergunta);
         container.appendChild(img);
     });
-
-    document.getElementById("imagem").src = ""; // limpa imagem central
 }
 
 function verificarResposta(resposta, correta) {
     if (resposta === correta) {
-        alert("✅ Resposta correta!");
+        pontuacao++;
+        alert("✅ Correto!");
     } else {
-        alert(`❌ Resposta incorreta. O correto era: ${correta}`);
+        alert(`❌ Incorreto. O certo era: ${correta}`);
     }
-    gerarPergunta();
+    gerarProximaPergunta();
 }
 
-function escolher(lista) {
-    return lista[Math.floor(Math.random() * lista.length)];
+function encerrarQuiz() {
+    const mensagem = `Você acertou ${pontuacao} de ${TOTAL_QUESTOES} questões.`;
+    document.getElementById("pergunta").innerText = "Fim do Quiz!";
+    document.getElementById("imagem").src = "";
+    document.getElementById("opcoes").innerHTML = "";
+
+    const resultado = document.getElementById("resultado");
+    resultado.innerText = mensagem;
+
+    const reiniciarBtn = document.createElement("button");
+    reiniciarBtn.innerText = "Reiniciar Quiz";
+    reiniciarBtn.onclick = iniciarQuiz;
+    resultado.appendChild(document.createElement("br"));
+    resultado.appendChild(reiniciarBtn);
 }
 
-function embaralhar(lista) {
-    return lista.sort(() => Math.random() - 0.5);
-}
-
-// Início
-document.addEventListener("DOMContentLoaded", gerarPergunta);
+document.addEventListener("DOMContentLoaded", iniciarQuiz);
