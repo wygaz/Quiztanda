@@ -1,22 +1,17 @@
+
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <title>Desafio da Quitanda</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>Desafio da Quitanda</title>
+  <script defer src="script.js"></script>
 </head>
 <body>
-    <img src="imagens/logo_viva.pdf" alt="Logotipo Viva" id="logo">
-    <h1>Desafio da Quitanda</h1>
-    <p>Qual é o seu nome ou apelido?</p>
-    <input type="text" id="nomeUsuario" placeholder="Digite seu nome...">
-    <button onclick="comecar()">Começar</button>
-    <script>
-        function comecar() {
-            const nome = document.getElementById('nomeUsuario').value || 'visitante';
-            localStorage.setItem("nome", nome);
-            window.location.href = 'quiz.html';
-        }
-    </script>
+  <h1>Desafio da Quitanda</h1>
+  <label for="nomeUsuario">Nome do usuário:</label>
+  <input type="text" id="nomeUsuario" required>
+  <label for="quantidadeQuestoes">Quantas questões deseja responder?</label>
+  <input type="number" id="quantidadeQuestoes" min="1" max="100">
+  <button onclick="iniciarQuiz()">Iniciar</button>
 </body>
 </html>
