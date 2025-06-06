@@ -4,15 +4,20 @@ let questaoAtual = 0;
 let totalQuestoes = 10;
 let nomeUsuario = "";
 
-function iniciarQuiz(parametros = {}) {
-    nomeUsuario = document.getElementById("nomeUsuario").value;
-    if (parametros.quantidade && Number.isInteger(parametros.quantidade) && parametros.quantidade > 0) {
-        totalQuestoes = parametros.quantidade;
-    }
+function iniciarQuiz() {
+    const nome = document.getElementById("nomeUsuario").value;
+    const qtd = parseInt(document.getElementById("quantidadeQuestoes").value);
+
+    localStorage.setItem("nomeUsuario", nome);
+    localStorage.setItem("totalQuestoes", qtd);
+
     window.location.href = "quiz.html";
 }
 
 function carregarQuiz() {
+    nomeUsuario = localStorage.getItem("nomeUsuario") || "";
+    totalQuestoes = parseInt(localStorage.getItem("totalQuestoes")) || 10;
+
     if (questaoAtual >= totalQuestoes) {
         finalizarQuiz();
         return;
