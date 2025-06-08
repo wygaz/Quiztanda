@@ -4,21 +4,30 @@
 <head>
     <meta charset="UTF-8">
     <title>Quiz da Quitanda</title>
-    <script defer src="script/script.js"></script>
+    <script defer src="script/script_testemesa.js"></script>
 </head>
 <body>
     <h1>Bem-vindo ao Quiz, <span id="nomeUsuario"></span>!</h1>
+
     <div id="pontuacao"></div>
+
     <div id="perguntaContainer"></div>
+
     <div id="opcoesContainer"></div>
+
     <button onclick="finalizarQuiz()">Finalizar Agora</button>
+
     <script>
+        // Quando a página carregar, exibir o nome do usuário no topo
         document.addEventListener("DOMContentLoaded", function() {
             const nomeUsuario = localStorage.getItem("nomeUsuario") || "";
             document.getElementById("nomeUsuario").innerText = nomeUsuario;
+
+            // Iniciar o quiz
             carregarQuiz();
         });
 
+        // Exemplo de perguntas para teste de mesa
         const perguntasOriginais = [
             {
                 texto: "Qual o estado desta fruta?",
