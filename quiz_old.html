@@ -1,0 +1,50 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Quiz da Quitanda</title>
+    <script defer src="script/script.js"></script>
+</head>
+<body>
+    <h1>Bem-vindo ao Quiz, <span id="nomeUsuario"></span>!</h1>
+    <div id="pontuacao"></div>
+    <div id="perguntaContainer"></div>
+    <div id="opcoesContainer"></div>
+    <button onclick="finalizarQuiz()">Finalizar Agora</button>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const nomeUsuario = localStorage.getItem("nomeUsuario") || "";
+            document.getElementById("nomeUsuario").innerText = nomeUsuario;
+            carregarQuiz();
+        });
+
+        const perguntasOriginais = [
+            {
+                texto: "Qual o estado desta fruta?",
+                imagem: "imagens/banana/banana_otimo.jpg",
+                opcoes: ["ótimo", "bom", "atenção", "descartável"],
+                correta: 0
+            },
+            {
+                texto: "Qual o estado desta fruta?",
+                imagem: "imagens/maca/maca_bom.jpg",
+                opcoes: ["ótimo", "bom", "atenção", "descartável"],
+                correta: 1
+            },
+            {
+                texto: "Qual o estado desta fruta?",
+                imagem: "imagens/laranja/laranja_descartavel.jpg",
+                opcoes: ["ótimo", "bom", "atenção", "descartável"],
+                correta: 3
+            },
+            {
+                texto: "Qual o estado desta fruta?",
+                imagem: "imagens/tomate/tomate_atencao.jpg",
+                opcoes: ["ótimo", "bom", "atenção", "descartável"],
+                correta: 2
+            }
+        ];
+    </script>
+</body>
+</html>
